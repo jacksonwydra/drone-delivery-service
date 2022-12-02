@@ -4,8 +4,8 @@ from mysql.connector import errorcode
 from dotenv import load_dotenv
 
 class RSEConnection:
-    def __init__(self, cnx=None):
-        self.cnx = cnx
+    def __init__(self):
+        self.cnx = self.connect()
         
     
     def connect(self) -> None:
@@ -32,14 +32,14 @@ class RSEConnection:
                 print(e)
             cnx = None
             
-        self.cnx = cnx
+        return cnx
         
         
     def disconnect(self) -> None:
         self.cnx.close()
         
         
-    def print_a_names(self):
+    def get_a_names(self) -> list[tuple]:
         cursor = self.cnx.cursor()
     
         query = ('''SELECT
@@ -48,9 +48,10 @@ class RSEConnection:
                         last_name
                     FROM users
                     WHERE first_name LIKE %s''')
-        a_names = 'A%'
-        cursor.execute(query, (a_names, ))
+        selector = 'A%'
+        cursor.execute(query, (selector,))
+        a_names = list(cursor)
+        a_names.insert(0, ('user_name', 'first_name', 'last_name'))
         
-        for username, first_name, last_name in cursor:
-            print(f'{first_name} {last_name} ({username})')
+        return list(a_names)
         

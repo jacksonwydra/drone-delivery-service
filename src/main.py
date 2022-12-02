@@ -1,13 +1,16 @@
-import tkinter as tk
 from rse import RSEConnection
+from tkwrapper import TKWrapper
 
 def main():
     db = RSEConnection()
-    db.connect()
+    tk = TKWrapper('Drone Delivery Service')
     
-    db.print_a_names()
+    a_names = db.get_a_names()
+    tk.make_table(a_names)
     
+    tk.run()
     db.disconnect()
+    
 
 if __name__ == '__main__':
     main()
