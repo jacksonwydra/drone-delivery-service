@@ -1,7 +1,7 @@
 # drone-delivery-service
 
-This project is a python GUI application for phase 4 of CS 4400.
-It uses tkinter for the GUI elements and mysql for the connection with the restaurant_supply_express databse.
+This project is a Python GUI application for phase 4 of CS 4400.
+It uses tkinter for the GUI elements and mysql for the connection with the restaurant_supply_express database.
 
 ## Project Members
 
