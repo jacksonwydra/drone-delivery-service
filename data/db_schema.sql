@@ -870,7 +870,7 @@ employees.taxID,
 employees.salary,
 employees.hired,
 employees.experience as employee_experience,
-ifnull(pilots.licenseID, 'n/a'),
+ifnull(pilots.licenseID, 'n/a') as licenseID,
 ifnull(pilots.experience, 'n/a') as piloting_experience,
 if(delivery_services.id is not null, 'yes', 'no') as manager_status
 from employees

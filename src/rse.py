@@ -31,10 +31,18 @@ def rse_connect():
     return cnx
 
 
-def execute_query(query, params=None):
+def execute_procedure(query, params=None):
     cnx = rse_connect()
     cursor = cnx.cursor()
     cursor.execute(query, params)
+    cnx.commit()
+    cnx.close()
+
+
+def get_view(query):
+    cnx = rse_connect()
+    cursor = cnx.cursor()
+    cursor.execute(query)
     output = cursor.fetchall()
     output.insert(0, cursor.column_names)
     cnx.close()
@@ -42,8 +50,23 @@ def execute_query(query, params=None):
     return output
 
 
+def add_employee(params):
+    '''[2] add_employee
+
+    Args:
+        params (tuple): (username, first_name, last_name, address, birthdate, taxID, hired, experience, salary)
+    '''
+    query = 'call add_employee(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
+    execute_procedure(query, params)
+    
+
 def display_employee_view():
-    query = ('SELECT * FROM display_employee_view')
-    employee_view = execute_query(query)
+    '''[25] display_employee_view
+
+    Returns:
+        list(tuple): Rows of the view with headers
+    '''
+    query = 'select * from display_employee_view;'
+    employee_view = get_view(query)
     
     return employee_view
