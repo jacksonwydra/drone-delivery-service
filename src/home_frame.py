@@ -18,27 +18,27 @@ class HomeFrame(tk.Frame):
         header = tk.Label(panel, text='Drone Delivery Service', font='Helvetica 36 bold')
         
         owner_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'View Owners', self,
-                                               data=rse.display_owner_view(), nav=make_owner_nav)
+                                               data=rse.display_owner_view, nav=make_owner_nav)
         owner_view_button.grid(row=1, column=0, sticky='w')
         
         employee_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'View Employees', self,
-                                               data=rse.display_employee_view(), nav=make_employee_nav)
+                                               data=rse.display_employee_view, nav=make_employee_nav)
         employee_view_button.grid(row=2, column=0, sticky='w')
         
         pilot_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Pilots', self,
-                                               data=rse.display_pilot_view(), nav=make_pilot_nav)
+                                               data=rse.display_pilot_view, nav=make_pilot_nav)
         pilot_view_button.grid(row=3, column=0, sticky='w')
         
         location_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Locations', self,
-                                               data=rse.display_location_view(), nav=make_location_nav)
+                                               data=rse.display_location_view, nav=make_location_nav)
         location_view_button.grid(row=4, column=0, sticky='w')
         
         ingredient_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Ingredients', self,
-                                               data=rse.display_ingredient_view(), nav=make_ingredient_nav)
+                                               data=rse.display_ingredient_view, nav=make_ingredient_nav)
         ingredient_view_button.grid(row=5, column=0, sticky='w')
         
         service_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Services', self,
-                                               data=rse.display_service_view(), nav=make_service_nav)
+                                               data=rse.display_service_view, nav=make_service_nav)
         service_view_button.grid(row=6, column=0, sticky='w')
         
         header.grid(row=0, column=0, pady=5, sticky='w', columnspan=panel.grid_size()[1]+1)

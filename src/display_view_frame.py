@@ -9,7 +9,7 @@ class DisplayViewFrame(tk.Frame):
         nav.pack(padx=5, pady=5, fill='x', expand=True)
         
         table = tk.Frame(self, relief='solid', borderwidth=1)
-        for i, entry in enumerate(kwargs['data']):
+        for i, entry in enumerate(kwargs['data']()):
             for j, value in enumerate(entry):
                 table.columnconfigure(j, weight=1)
                 font = ('Helvetica', 14, 'bold' if i == 0 else '')

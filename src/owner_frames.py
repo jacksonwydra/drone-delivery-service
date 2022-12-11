@@ -20,9 +20,9 @@ class AddOwnerFrame(tk.Frame):
         tk.Frame.__init__(self, parent)
         
         nav = tk.Frame(self)
-        back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
-                                      data=rse.display_owner_view(), nav=make_owner_nav)
-        back_button.grid(row=0, column=0, sticky='w')
+        self.back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
+                                      data=rse.display_owner_view, nav=make_owner_nav)
+        self.back_button.grid(row=0, column=0, sticky='w')
         
         make_header(nav, 'Add Owner')
         nav.pack(padx=5, pady=5, fill='both', expand=True)
@@ -50,6 +50,7 @@ class AddOwnerFrame(tk.Frame):
             self.address.get(),
             self.birthdate.get()
         ))
+        self.back_button.invoke()
         
         
     def clear(self):

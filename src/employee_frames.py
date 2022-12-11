@@ -20,9 +20,9 @@ class AddEmployeeFrame(tk.Frame):
         tk.Frame.__init__(self, parent)
         
         nav = tk.Frame(self)
-        back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
-                                      data=rse.display_employee_view(), nav=make_employee_nav)
-        back_button.grid(row=0, column=0, sticky='w')
+        self.back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
+                                      data=rse.display_employee_view, nav=make_employee_nav)
+        self.back_button.grid(row=0, column=0, sticky='w')
         
         make_header(nav, 'Add Employee')
         nav.pack(padx=5, pady=5, fill='both', expand=True)
@@ -58,6 +58,7 @@ class AddEmployeeFrame(tk.Frame):
             self.experience.get(),
             self.salary.get()
         ))
+        self.back_button.invoke()
         
         
     def clear(self):
