@@ -1,4 +1,7 @@
-from tkwrapper import TKWrapper
+import sys
+sys.path.insert(0, "./")
+
+from src.tkwrapper import TKWrapper
 
 def main():
     root = TKWrapper(title='Drone Delivery Service')
