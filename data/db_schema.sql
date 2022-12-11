@@ -964,3 +964,6 @@ left join drones on d.id = drones.id
 left join payload on drones.id = payload.id and drones.tag = payload.tag
 left join ingredients on payload.barcode = ingredients.barcode
 group by 1, 2, 3, 4, 5;
+
+-- Worker View
+
