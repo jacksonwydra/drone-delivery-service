@@ -50,6 +50,16 @@ def get_view(query):
     return output
 
 
+def add_owner(params):
+    '''[1] add_owner
+
+    Args:
+        params (tuple): (username, first_name, last_name, address, birthdate)
+    '''
+    query = 'call add_owner(%s, %s, %s, %s, %s);'
+    execute_procedure(query, params)
+    
+
 def add_employee(params):
     '''[2] add_employee
 
@@ -59,14 +69,132 @@ def add_employee(params):
     query = 'call add_employee(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
     execute_procedure(query, params)
     
+    
+def add_pilot_role(params):
+    '''[3] add_pilot_role
+
+    Args:
+        params (tuple): (username, licenseID, pilot_experience)
+    '''
+    query = 'call add_pilot_role(%s, %s, %s);'
+    execute_procedure(query, params)
+    
+    
+def add_worker_role(params):
+    '''[4] add_worker_role
+
+    Args:
+        params (tuple): (username)
+    '''
+    query = 'call add_worker_role(%s);'
+    execute_procedure(query, params)
+    
+    
+def add_ingredient(params):
+    '''[5] add_ingredient
+
+    Args:
+        params (tuple): (barcode, iname, weight)
+    '''
+    query = 'call add_ingredient(%s, %s, %s);'
+    execute_procedure(query, params)
+    
+    
+def add_drone(params):
+    '''[6] add_drone
+
+    Args:
+        params (tuple): (id, tag, fuel, capacity, sales, flown_by)
+    '''
+    query = 'call add_drone(%s, %s, %s, %s, %s, %s);'
+    execute_procedure(query, params)
+    
+    
+def add_restaurant(params):
+    '''[7] add_restaurant
+
+    Args:
+        params (tuple): (long_name, rating, spent, location)
+    '''
+    query = 'call add_restaurant(%s, %s, %s, %s);'
+    execute_procedure(query, params)
+    
+    
+def add_service(params):
+    '''[8] add_service
+
+    Args:
+        params (tuple): (id, long_name, home_base, manager)
+    '''
+    query = 'call add_service(%s, %s, %s, %s);'
+    execute_procedure(query, params)
+    
+    
+def add_location(params):
+    '''[9] add_location
+
+    Args:
+        params (tuple): (label, x_coord, y_coord, space)
+    '''
+    query = 'call add_location(%s, %s, %s, %s);'
+    execute_procedure(query, params)
+    
+    
+def display_owner_view():
+    '''
+    [24] display_owner_view
+    '''
+    query = 'select * from display_owner_view;'
+    owner_view = get_view(query)
+    
+    return owner_view
+    
 
 def display_employee_view():
-    '''[25] display_employee_view
-
-    Returns:
-        list(tuple): Rows of the view with headers
+    '''
+    [25] display_employee_view
     '''
     query = 'select * from display_employee_view;'
     employee_view = get_view(query)
     
     return employee_view
+
+
+def display_pilot_view():
+    '''
+    [26] display_pilot_view
+    '''
+    query = 'select * from display_pilot_view;'
+    pilot_view = get_view(query)
+    
+    return pilot_view
+
+
+def display_location_view():
+    '''
+    [27] display_location_view
+    '''
+    query = 'select * from display_location_view;'
+    location_view = get_view(query)
+    
+    return location_view
+
+
+def display_ingredient_view():
+    '''
+    [28] display_ingredient_view
+    '''
+    query = 'select * from display_ingredient_view;'
+    ingredient_view = get_view(query)
+    
+    return ingredient_view
+
+
+def display_service_view():
+    '''
+    [29] display_service_view
+    '''
+    query = 'select * from display_service_view;'
+    service_view = get_view(query)
+    
+    return service_view

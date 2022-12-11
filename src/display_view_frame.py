@@ -1,16 +1,11 @@
 import tkinter as tk
-from src.utils import make_home_button, make_header
 
 
 class DisplayViewFrame(tk.Frame):
     def __init__(self, parent, controller, **kwargs):
         tk.Frame.__init__(self, parent)
         
-        nav = tk.Frame(self)
-        home_button = make_home_button(nav, controller, self)
-        home_button.grid(row=0, column=0, sticky='w')
-        
-        make_header(nav, kwargs['title'])
+        nav = kwargs['nav'](self, controller)
         nav.pack(padx=5, pady=5, fill='x', expand=True)
         
         table = tk.Frame(self, relief='solid', borderwidth=1)

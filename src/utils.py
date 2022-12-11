@@ -1,12 +1,6 @@
 import tkinter as tk
 
 
-def make_home_button(parent, controller, frame):
-    home_button = tk.Button(parent, text='Home',
-    command=lambda : controller.show_frame(None, frame))
-    return home_button
-
-
 def make_nav_button(parent, controller, F, text, frame=None, **kwargs):
     nav_button = tk.Button(parent, text=text,
     command=lambda : controller.show_frame(F, frame, **kwargs))

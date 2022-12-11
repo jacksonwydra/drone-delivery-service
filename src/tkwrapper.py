@@ -1,14 +1,15 @@
 import tkinter as tk
 from src.home_frame import HomeFrame
 
+
 class TKWrapper(tk.Tk):
-    def __init__(self, *args, title='', width=None, height=None, **kwargs):
+    def __init__(self, *args, title='', **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title(title)
         
         # Center the screen
-        width = width if width else int(self.winfo_screenwidth() * 0.75)
-        height = height if height else int(self.winfo_screenheight() * 0.75)
+        width = int(self.winfo_screenwidth() * 0.75)
+        height = int(self.winfo_screenheight() * 0.75)
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         x = (screen_width - width) // 2
@@ -25,7 +26,13 @@ class TKWrapper(tk.Tk):
     
     
     def show_frame(self, F, previous, **kwargs):
-        if previous: previous.destroy()
+        if previous is self.home_frame:
+            self.home_frame.forget()
+        elif previous:
+            previous.destroy()
+        
         if F:
             frame = F(self.container, self, **kwargs)
             frame.grid(row=0, column=0, sticky='nsew')
+        else:
+            self.home_frame.grid(row=0, column=0, sticky='nsew')
