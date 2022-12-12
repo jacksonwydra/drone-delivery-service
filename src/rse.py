@@ -161,6 +161,18 @@ def add_location(params):
     query = 'call add_location(%s, %s, %s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def start_funding(params):
+    '''[10] start_funding
+
+    Args:
+        params (tuple): (owner, long_name)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call start_funding(%s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
