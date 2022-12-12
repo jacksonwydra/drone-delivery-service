@@ -255,13 +255,25 @@ def join_swarm(params):
 
 
 def leave_swarm(params):
-    '''[15] leave_swarm
+    '''[16] leave_swarm
 
     Args:
         params (tuple): (id, tag)
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call leave_swarm(%s, %s);'
+    execute_procedure(query, params)
+    return None
+
+
+def load_drone(params):
+    '''[17] load_drone
+
+    Args:
+        params (tuple): (id, tag, barcode, more_packages, price)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call load_drone(%s, %s, %s, %s, %s);'
     execute_procedure(query, params)
     return None
     
@@ -354,3 +366,13 @@ def display_restaurant_view():
     restaurant_view = get_view(query)
     
     return restaurant_view
+
+
+def display_payload_view():
+    '''
+    display_payload_view
+    '''
+    query = 'select * from payload;'
+    payload_view = get_view(query)
+    
+    return payload_view

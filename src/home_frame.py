@@ -11,6 +11,7 @@ from src.service_frames import make_service_nav
 from src.drone_frames import make_drone_nav
 from src.worker_frames import make_worker_nav
 from src.restaurant_frames import make_restaurant_nav
+from src.payload_frames import make_payload_nav
 
 
 class HomeFrame(tk.Frame):
@@ -55,6 +56,10 @@ class HomeFrame(tk.Frame):
         restaurant_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Restaurants', self,
                                                data=rse.display_restaurant_view, nav=make_restaurant_nav)
         restaurant_view_button.grid(row=9, column=0, sticky='w')
+        
+        payload_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Payloads', self,
+                                               data=rse.display_payload_view, nav=make_payload_nav)
+        payload_view_button.grid(row=10, column=0, sticky='w')
         
         header.grid(row=0, column=0, pady=5, sticky='w', columnspan=panel.grid_size()[1]+1)
         panel.pack(padx=5, pady=5, fill='both', expand=True)
