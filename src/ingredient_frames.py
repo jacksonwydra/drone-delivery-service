@@ -28,23 +28,35 @@ class AddIngredientFrame(tk.Frame):
         nav.pack(padx=5, pady=5, fill='both', expand=True)
         
         panel = tk.Frame(self)
-        self.name = make_entry(panel, 'Name', 0)
-        self.name.focus_set()
+        self.barcode = make_entry(panel, 'Barcode', 0)
+        self.barcode.focus_set()
+        self.iname = make_entry(panel, 'Ingredient Name', 1)
+        self.weight = make_entry(panel, 'Weight', 2)
         
         submit_button = tk.Button(panel, text='Submit', command=self.submit)
-        submit_button.grid(row=1, column=0, sticky='w')
+        submit_button.grid(row=3, column=0, sticky='w')
         clear_button = tk.Button(panel, text='Clear', command=self.clear)
-        clear_button.grid(row=1, column=1, sticky='w')
+        clear_button.grid(row=3, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
         panel.pack(padx=5, pady=5, fill='both', expand=True)
         
         
     def submit(self):
-        rse.add_ingredient((
-            self.name.get()
+        error = rse.add_ingredient((
+            self.barcode.get(),
+            self.iname.get(),
+            self.weight.get()
         ))
-        self.back_button.invoke()
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=4, column=0, columnspan=3, sticky='w')
+        else:
+            self.back_button.invoke()
         
         
     def clear(self):
-        self.name.delete(0, 'end')
+        self.barcode.delete(0, 'end')
+        self.iname.delete(0, 'end')
+        self.weight.delete(0, 'end')
         

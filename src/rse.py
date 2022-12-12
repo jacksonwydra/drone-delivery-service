@@ -73,8 +73,10 @@ def add_employee(params):
     Args:
         params (tuple): (username, first_name, last_name, address, birthdate, taxID, hired, experience, salary)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_employee(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_pilot_role(params):
@@ -83,8 +85,10 @@ def add_pilot_role(params):
     Args:
         params (tuple): (username, licenseID, pilot_experience)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_pilot_role(%s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_worker_role(params):
@@ -93,8 +97,10 @@ def add_worker_role(params):
     Args:
         params (tuple): (username)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_worker_role(%s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_ingredient(params):
@@ -103,8 +109,10 @@ def add_ingredient(params):
     Args:
         params (tuple): (barcode, iname, weight)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_ingredient(%s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_drone(params):
@@ -113,8 +121,10 @@ def add_drone(params):
     Args:
         params (tuple): (id, tag, fuel, capacity, sales, flown_by)
     '''
+    if not all(params[:-1]): return 'Make sure to fill out all values.'
     query = 'call add_drone(%s, %s, %s, %s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_restaurant(params):
@@ -123,8 +133,10 @@ def add_restaurant(params):
     Args:
         params (tuple): (long_name, rating, spent, location)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_restaurant(%s, %s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_service(params):
@@ -133,8 +145,10 @@ def add_service(params):
     Args:
         params (tuple): (id, long_name, home_base, manager)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_service(%s, %s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def add_location(params):
@@ -143,8 +157,10 @@ def add_location(params):
     Args:
         params (tuple): (label, x_coord, y_coord, space)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_location(%s, %s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
@@ -205,3 +221,33 @@ def display_service_view():
     service_view = get_view(query)
     
     return service_view
+
+
+def display_drone_view():
+    '''
+    display_drone_view
+    '''
+    query = 'select * from drones;'
+    drone_view = get_view(query)
+    
+    return drone_view
+
+
+def display_worker_view():
+    '''
+    display_worker_view
+    '''
+    query = 'select * from workers;'
+    worker_view = get_view(query)
+    
+    return worker_view
+
+
+def display_restaurant_view():
+    '''
+    display_restaurant_view
+    '''
+    query = 'select * from restaurants;'
+    restaurant_view = get_view(query)
+    
+    return restaurant_view

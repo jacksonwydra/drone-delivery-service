@@ -4,35 +4,35 @@ from src.utils import make_nav_button, make_header, make_entry
 from src.display_view_frame import DisplayViewFrame
 
 
-def make_location_nav(parent, controller):
+def make_restaurant_nav(parent, controller):
     nav = tk.Frame(parent)
     home_button = make_nav_button(nav, controller, None, 'Home', parent)
     home_button.grid(row=0, column=0, sticky='w')
     
-    add_location_button = make_nav_button(nav, controller, AddLocationFrame, 'Add', parent)
-    add_location_button.grid(row=0, column=1, sticky='w')
-    make_header(nav, 'Locations')
+    add_restaurant_button = make_nav_button(nav, controller, AddRestaurantFrame, 'Add', parent)
+    add_restaurant_button.grid(row=0, column=1, sticky='w')
+    make_header(nav, 'Restaurants')
     return nav
 
 
-class AddLocationFrame(tk.Frame):
+class AddRestaurantFrame(tk.Frame):
     def __init__(self, parent, controller, **kwargs):
         tk.Frame.__init__(self, parent)
         
         nav = tk.Frame(self)
         self.back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
-                                      data=rse.display_location_view, nav=make_location_nav)
+                                      data=rse.display_restaurant_view, nav=make_restaurant_nav)
         self.back_button.grid(row=0, column=0, sticky='w')
         
-        make_header(nav, 'Add Location')
+        make_header(nav, 'Add Restaurant')
         nav.pack(padx=5, pady=5, fill='both', expand=True)
         
         panel = tk.Frame(self)
-        self.label = make_entry(panel, 'Label', 0)
-        self.label.focus_set()
-        self.x_coord = make_entry(panel, 'X Coord', 1)
-        self.y_coord = make_entry(panel, 'Y Coord', 2)
-        self.space = make_entry(panel, 'Space', 3)
+        self.long_name = make_entry(panel, 'Long Name', 0)
+        self.long_name.focus_set()
+        self.rating = make_entry(panel, 'Rating', 1)
+        self.spent = make_entry(panel, 'Spent', 2)
+        self.location = make_entry(panel, 'Location', 3)
         
         submit_button = tk.Button(panel, text='Submit', command=self.submit)
         submit_button.grid(row=4, column=0, sticky='w')
@@ -44,11 +44,11 @@ class AddLocationFrame(tk.Frame):
         
         
     def submit(self):
-        error = rse.add_location((
-            self.label.get(),
-            self.x_coord.get(),
-            self.y_coord.get(),
-            self.space.get()
+        error = rse.add_restaurant((
+            self.long_name.get(),
+            self.rating.get(),
+            self.spent.get(),
+            self.location.get()
         ))
         if error:
             self.error.set(error)
@@ -58,8 +58,8 @@ class AddLocationFrame(tk.Frame):
         
         
     def clear(self):
-        self.label.delete(0, 'end')
-        self.x_coord.delete(0, 'end')
-        self.y_coord.delete(0, 'end')
-        self.space.delete(0, 'end')
+        self.long_name.delete(0, 'end')
+        self.rating.delete(0, 'end')
+        self.spent.delete(0, 'end')
+        self.location.delete(0, 'end')
         

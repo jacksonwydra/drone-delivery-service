@@ -28,23 +28,35 @@ class AddPilotFrame(tk.Frame):
         nav.pack(padx=5, pady=5, fill='both', expand=True)
         
         panel = tk.Frame(self)
-        self.name = make_entry(panel, 'Name', 0)
-        self.name.focus_set()
+        self.username = make_entry(panel, 'Username', 0)
+        self.username.focus_set()
+        self.licenseID = make_entry(panel, 'License ID', 1)
+        self.pilot_experience = make_entry(panel, 'Pilot Experience', 2)
         
         submit_button = tk.Button(panel, text='Submit', command=self.submit)
-        submit_button.grid(row=1, column=0, sticky='w')
+        submit_button.grid(row=3, column=0, sticky='w')
         clear_button = tk.Button(panel, text='Clear', command=self.clear)
-        clear_button.grid(row=1, column=1, sticky='w')
+        clear_button.grid(row=3, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
         panel.pack(padx=5, pady=5, fill='both', expand=True)
         
         
     def submit(self):
-        rse.add_pilot((
-            self.name.get()
+        error = rse.add_pilot_role((
+            self.username.get(),
+            self.licenseID.get(),
+            self.pilot_experience.get()
         ))
-        self.back_button.invoke()
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=4, column=0, columnspan=3, sticky='w')
+        else:
+            self.back_button.invoke()
         
         
     def clear(self):
-        self.name.delete(0, 'end')
+        self.username.delete(0, 'end')
+        self.licenseID.delete(0, 'end')
+        self.pilot_experience.delete(0, 'end')
         

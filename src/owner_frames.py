@@ -54,7 +54,7 @@ class AddOwnerFrame(tk.Frame):
         ))
         if error:
             self.error.set(error)
-            self.error_box.grid(row=6, column=0, columnspan=5, sticky='w')
+            self.error_box.grid(row=6, column=0, columnspan=3, sticky='w')
         else:
             self.back_button.invoke()
         

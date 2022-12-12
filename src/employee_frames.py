@@ -1,6 +1,6 @@
 import tkinter as tk
 import src.rse as rse
-from src.utils import make_nav_button, make_header, make_entry
+from src.utils import make_nav_button, make_header, make_entry, make_date
 from src.display_view_frame import DisplayViewFrame
 
 
@@ -33,9 +33,9 @@ class AddEmployeeFrame(tk.Frame):
         self.first_name = make_entry(panel, 'First Name', 1)
         self.last_name = make_entry(panel, 'Last Name', 2)
         self.address = make_entry(panel, 'Address', 3)
-        self.birthdate = make_entry(panel, 'Birthdate', 4)
+        self.birthdate = make_date(panel, 'Birthdate', 4)
         self.taxID = make_entry(panel, 'Tax ID', 5)
-        self.hired = make_entry(panel, 'Hire Date', 6)
+        self.hired = make_date(panel, 'Hire Date', 6)
         self.experience = make_entry(panel, 'Experience', 7)
         self.salary = make_entry(panel, 'Salary', 8)
         
@@ -43,22 +43,28 @@ class AddEmployeeFrame(tk.Frame):
         submit_button.grid(row=9, column=0, sticky='w')
         clear_button = tk.Button(panel, text='Clear', command=self.clear)
         clear_button.grid(row=9, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
         panel.pack(padx=5, pady=5, fill='both', expand=True)
         
         
     def submit(self):
-        rse.add_employee((
+        error = rse.add_employee((
             self.username.get(),
             self.first_name.get(),
             self.last_name.get(),
             self.address.get(),
-            self.birthdate.get(),
+            self.birthdate.get_date(),
             self.taxID.get(),
-            self.hired.get(),
+            self.hired.get_date(),
             self.experience.get(),
             self.salary.get()
         ))
-        self.back_button.invoke()
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=10, column=0, columnspan=3, sticky='w')
+        else:
+            self.back_button.invoke()
         
         
     def clear(self):
@@ -66,9 +72,9 @@ class AddEmployeeFrame(tk.Frame):
         self.first_name.delete(0, 'end')
         self.last_name.delete(0, 'end')
         self.address.delete(0, 'end')
-        self.birthdate.delete(0, 'end')
+        self.birthdate.set_date('01/01/2000')
         self.taxID.delete(0, 'end')
-        self.hired.delete(0, 'end')
+        self.hired.set_date('01/01/2000')
         self.experience.delete(0, 'end')
         self.salary.delete(0, 'end')
         
