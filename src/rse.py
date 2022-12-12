@@ -252,6 +252,18 @@ def join_swarm(params):
     query = 'call join_swarm(%s, %s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def leave_swarm(params):
+    '''[15] leave_swarm
+
+    Args:
+        params (tuple): (id, tag)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call leave_swarm(%s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
