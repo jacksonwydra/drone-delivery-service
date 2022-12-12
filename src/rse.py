@@ -54,6 +54,17 @@ def get_view(query):
     
     return output
 
+def execute_query(query):
+    cnx = rse_connect()
+    cursor = cnx.cursor()
+    cursor.execute(query)
+    output = cursor.fetchall()
+    warnings = cursor.fetchwarnings()
+    if warnings: print(warnings)
+    cnx.close()
+    
+    return output
+
 
 def add_owner(params):
     '''[1] add_owner
@@ -61,7 +72,15 @@ def add_owner(params):
     Args:
         params (tuple): (username, first_name, last_name, address, birthdate)
     '''
+    # Check for null values
     if not all(params): return 'Make sure to fill out all values.'
+    
+    # Make sure user does not already exist
+    for row in execute_query('select username from employees union select username from restaurant_owners'):
+        username = row[0]
+        if username == params[0]:
+            return 'User already exists'
+        
     query = 'call add_owner(%s, %s, %s, %s, %s);'
     execute_procedure(query, params)
     return None
