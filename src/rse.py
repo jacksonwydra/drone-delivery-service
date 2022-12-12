@@ -14,6 +14,7 @@ def rse_connect():
     'password': RSE_PASSWORD,
     'host': '127.0.0.1',
     'database': 'restaurant_supply_express',
+    'get_warnings': True,
     'raise_on_warnings': True
     }
 
@@ -34,10 +35,10 @@ def rse_connect():
 def execute_procedure(query, params=None):
     cnx = rse_connect()
     cursor = cnx.cursor()
-    if params:
-        params = tuple([x if x != '' else None for x in params ])
     cursor.execute(query, params)
     cnx.commit()
+    warnings = cursor.fetchwarnings()
+    if warnings: print(warnings)
     cnx.close()
 
 
@@ -47,6 +48,8 @@ def get_view(query):
     cursor.execute(query)
     output = cursor.fetchall()
     output.insert(0, cursor.column_names)
+    warnings = cursor.fetchwarnings()
+    if warnings: print(warnings)
     cnx.close()
     
     return output
@@ -58,8 +61,10 @@ def add_owner(params):
     Args:
         params (tuple): (username, first_name, last_name, address, birthdate)
     '''
+    if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_owner(%s, %s, %s, %s, %s);'
     execute_procedure(query, params)
+    return None
     
 
 def add_employee(params):

@@ -1,6 +1,6 @@
 import tkinter as tk
 import src.rse as rse
-from src.utils import make_nav_button, make_header, make_entry
+from src.utils import make_nav_button, make_header, make_entry, make_date
 from src.display_view_frame import DisplayViewFrame
 
 
@@ -33,24 +33,30 @@ class AddOwnerFrame(tk.Frame):
         self.first_name = make_entry(panel, 'First Name', 1)
         self.last_name = make_entry(panel, 'Last Name', 2)
         self.address = make_entry(panel, 'Address', 3)
-        self.birthdate = make_entry(panel, 'Birthdate', 4)
+        self.birthdate = make_date(panel, 'Birthdate', 4)
         
         submit_button = tk.Button(panel, text='Submit', command=self.submit)
         submit_button.grid(row=5, column=0, sticky='w')
         clear_button = tk.Button(panel, text='Clear', command=self.clear)
         clear_button.grid(row=5, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
         panel.pack(padx=5, pady=5, fill='both', expand=True)
         
         
     def submit(self):
-        rse.add_owner((
+        error = rse.add_owner((
             self.username.get(),
             self.first_name.get(),
             self.last_name.get(),
             self.address.get(),
-            self.birthdate.get()
+            self.birthdate.get_date()
         ))
-        self.back_button.invoke()
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=6, column=0, columnspan=5, sticky='w')
+        else:
+            self.back_button.invoke()
         
         
     def clear(self):
@@ -58,5 +64,5 @@ class AddOwnerFrame(tk.Frame):
         self.first_name.delete(0, 'end')
         self.last_name.delete(0, 'end')
         self.address.delete(0, 'end')
-        self.birthdate.delete(0, 'end')
+        self.birthdate.set_date('01/01/2000')
         
