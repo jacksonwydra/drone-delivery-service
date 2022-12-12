@@ -266,10 +266,10 @@ create procedure add_owner (in ip_username varchar(40), in ip_first_name varchar
 	in ip_last_name varchar(100), in ip_address varchar(500), in ip_birthdate date)
 sp_main: begin
     -- ensure new owner has a unique username
-    if ip_username not in (select username from users) then
-		insert into users values (ip_username, ip_first_name, ip_last_name, ip_address, ip_birthdate);
-	end if;
     if ip_username not in (select username from employees union select username from restaurant_owners) then
+		if ip_username not in (select username from users) then
+			insert into users values (ip_username, ip_first_name, ip_last_name, ip_address, ip_birthdate);
+		end if;
 		insert into restaurant_owners values (ip_username);
 	end if;
 end //
@@ -289,13 +289,11 @@ create procedure add_employee (in ip_username varchar(40), in ip_first_name varc
 sp_main: begin
     -- ensure new owner has a unique username
     -- ensure new employee has a unique tax identifier
-    if ip_taxID in (select taxID from employees) then
-		leave sp_main;
-	end if;
-    if ip_username not in (select username from users) then
-		insert into users values (ip_username, ip_first_name, ip_last_name, ip_address, ip_birthdate);
-	end if;
-    if ip_username not in (select username from employees union select username from restaurant_owners) then
+    if ip_username not in (select username from employees union select username from restaurant_owners)
+    and ip_taxID not in (select taxID from employees) then
+		if ip_username not in (select username from users) then
+			insert into users values (ip_username, ip_first_name, ip_last_name, ip_address, ip_birthdate);
+		end if;
 		insert into employees values (ip_username, ip_taxID, ip_hired, ip_employee_experience, ip_salary);
 	end if;
 end //
@@ -313,7 +311,10 @@ create procedure add_pilot_role (in ip_username varchar(40), in ip_licenseID var
 sp_main: begin
     -- ensure new employee exists
     -- ensure new pilot has a unique license identifier
-    if ip_username in (select username from employees) and ip_licenseID not in (SELECT licenseID FROM pilots) then
+    if ip_username in (select username from employees)
+    and ip_username not in (SELECT username FROM pilots)
+    and ip_licenseID not in (SELECT licenseID FROM pilots)
+    then
 		insert into pilots values (ip_username, ip_licenseID, ip_pilot_experience);
 	end if;
 end //
@@ -328,7 +329,9 @@ delimiter //
 create procedure add_worker_role (in ip_username varchar(40))
 sp_main: begin
     -- ensure new employee exists
-    if ip_username in (select username from employees) then
+    if ip_username in (select username from employees)
+    and ip_username not in (select username from workers)
+    then
 		insert into workers values (ip_username);
 	end if;
 end //
@@ -628,7 +631,6 @@ a specific ingredient to a drone's payload so that we can sell them for some
 specific price to other restaurants.  The drone can only be loaded if it's located
 at its delivery service's home base, and the drone must have enough capacity to
 carry the increased number of items.
-
 The change/delta quantity value must be positive, and must be added to the quantity
 of the ingredient already loaded onto the drone as applicable.  And if the ingredient
 already exists on the drone, then the existing price must not be changed. */
@@ -651,8 +653,7 @@ sp_main: begin
     and (select sum(quantity) + ip_more_packages from payload where id = ip_id and tag = ip_tag)
 		<= (select capacity from drones where id = ip_id and tag = ip_tag) then
 		if exists (select quantity from payload where id = ip_id and tag = ip_tag and barcode = ip_barcode) then
-			update payload set quantity
-				= (select quantity from payload where id = ip_id and tag = ip_tag and barcode = ip_barcode) + ip_more_packages;
+			update payload set quantity = quantity + ip_more_packages where id = ip_id and tag = ip_tag and barcode = ip_barcode;
 		else
 			insert into payload values (ip_id, ip_tag, ip_barcode, ip_more_packages, ip_price);
 		end if;
@@ -675,7 +676,9 @@ sp_main: begin
 		select home_base from delivery_services
         left join drones on delivery_services.home_base = drones.hover and delivery_services.id = drones.id
         where drones.id = ip_id and drones.tag = ip_tag
-	) then
+	)
+    and ip_more_fuel > 0
+    then
 		update drones set fuel = fuel + ip_more_fuel where drones.id = ip_id and drones.tag = ip_tag;
 	end if;
 end //
@@ -713,7 +716,7 @@ sp_main: begin
     -- ensure that the drone isn't already at the location
     -- ensure that the drone/swarm has enough fuel to reach the destination and (then) home base
     -- ensure that the drone/swarm has enough space at the destination for the flight
-    if (ip_id, ip_tag) in (select id, tag from drones)
+    if (ip_id, ip_tag) in (select id, tag from drones where flown_by is not null)
     and ip_destination in (select label from locations)
     and ip_destination not in (select hover from drones where id = ip_id and tag = ip_tag)
     and fuel_required((select hover from drones where id = ip_id and tag = ip_tag), ip_destination)
@@ -726,6 +729,7 @@ sp_main: begin
 		set @fuel_required = fuel_required((select hover from drones where id = ip_id and tag = ip_tag), ip_destination);
 		update drones set hover = ip_destination, fuel = fuel - @fuel_required
 			where (id = ip_id and tag = ip_tag) or (swarm_id = ip_id and swarm_tag = ip_tag);
+		update pilots set experience = experience + 1 where username in (select flown_by from drones where id = ip_id and tag = ip_tag);
 	end if;
 end //
 delimiter ;
@@ -828,6 +832,8 @@ sp_main: begin
 	if ip_username in (select username from workers) then
 		leave sp_main;
 	end if;
+	delete from work_for where username = ip_username;
+	delete from employees where username = ip_username;
 	delete from users where username = ip_username;
 end //
 delimiter ;
@@ -870,7 +876,7 @@ employees.taxID,
 employees.salary,
 employees.hired,
 employees.experience as employee_experience,
-ifnull(pilots.licenseID, 'n/a') as licenseID,
+ifnull(pilots.licenseID, 'n/a'),
 ifnull(pilots.experience, 'n/a') as piloting_experience,
 if(delivery_services.id is not null, 'yes', 'no') as manager_status
 from employees
@@ -964,6 +970,3 @@ left join drones on d.id = drones.id
 left join payload on drones.id = payload.id and drones.tag = payload.tag
 left join ingredients on payload.barcode = ingredients.barcode
 group by 1, 2, 3, 4, 5;
-
--- Worker View
-

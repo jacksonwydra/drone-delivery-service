@@ -34,6 +34,8 @@ def rse_connect():
 def execute_procedure(query, params=None):
     cnx = rse_connect()
     cursor = cnx.cursor()
+    if params:
+        params = tuple([x if x != '' else None for x in params ])
     cursor.execute(query, params)
     cnx.commit()
     cnx.close()
