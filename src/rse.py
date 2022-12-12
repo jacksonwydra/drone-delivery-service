@@ -300,6 +300,18 @@ def fly_drone(params):
     query = 'call fly_drone(%s, %s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def purchase_ingredient(params):
+    '''[20] purchase_ingredient
+
+    Args:
+        params (tuple): (long_name, id, tag, barcode, quantity)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call purchase_ingredient(%s, %s, %s, %s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
