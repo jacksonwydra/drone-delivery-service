@@ -173,6 +173,18 @@ def start_funding(params):
     query = 'call start_funding(%s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def hire_employee(params):
+    '''[11] hire_employee
+
+    Args:
+        params (tuple): (username, id)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call hire_employee(%s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():

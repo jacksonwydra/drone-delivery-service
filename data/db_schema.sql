@@ -876,9 +876,10 @@ employees.taxID,
 employees.salary,
 employees.hired,
 employees.experience as employee_experience,
-ifnull(pilots.licenseID, 'n/a'),
+ifnull(pilots.licenseID, 'n/a') as licenseID,
 ifnull(pilots.experience, 'n/a') as piloting_experience,
-if(delivery_services.id is not null, 'yes', 'no') as manager_status
+if(delivery_services.id is not null, 'yes', 'no') as manager_status,
+(select group_concat(w.id) from work_for as w where w.username = employees.username) as work_for
 from employees
 left join pilots on employees.username = pilots.username
 left join delivery_services on employees.username = delivery_services.manager;
