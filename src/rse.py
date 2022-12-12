@@ -185,6 +185,18 @@ def hire_employee(params):
     query = 'call hire_employee(%s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def fire_employee(params):
+    '''[11] fire_employee
+
+    Args:
+        params (tuple): (username, id)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call fire_employee(%s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
