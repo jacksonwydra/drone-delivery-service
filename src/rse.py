@@ -188,13 +188,25 @@ def hire_employee(params):
 
 
 def fire_employee(params):
-    '''[11] fire_employee
+    '''[12] fire_employee
 
     Args:
         params (tuple): (username, id)
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call fire_employee(%s, %s);'
+    execute_procedure(query, params)
+    return None
+
+
+def manage_service(params):
+    '''[13] manage_service
+
+    Args:
+        params (tuple): (username, id)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call manage_service(%s, %s);'
     execute_procedure(query, params)
     return None
     
