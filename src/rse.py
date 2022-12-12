@@ -276,6 +276,18 @@ def load_drone(params):
     query = 'call load_drone(%s, %s, %s, %s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def refuel_drone(params):
+    '''[18] refuel_drone
+
+    Args:
+        params (tuple): (id, tag, more_fuel)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call refuel_drone(%s, %s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
