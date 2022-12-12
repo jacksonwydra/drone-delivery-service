@@ -312,6 +312,18 @@ def purchase_ingredient(params):
     query = 'call purchase_ingredient(%s, %s, %s, %s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def remove_ingredient(params):
+    '''[21] remove_ingredient
+
+    Args:
+        params (tuple): (barcode,)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call remove_ingredient(%s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():

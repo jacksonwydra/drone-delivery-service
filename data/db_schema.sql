@@ -929,15 +929,15 @@ sold at that location. */
 -- -----------------------------------------------------------------------------
 create or replace view display_ingredient_view as
 select ingredients.iname as ingredient_name,
+ingredients.barcode,
 drones.hover as location,
 sum(payload.quantity) as amount_available,
 min(payload.price) as low_price,
 max(payload.price) as high_price
 from ingredients
-left join payload on ingredients.barcode = payload.barcode
-left join drones on drones.id = payload.id and drones.tag = payload.tag
-group by 1, 2
-having location is not null;
+left outer join payload on ingredients.barcode = payload.barcode
+left outer join drones on drones.id = payload.id and drones.tag = payload.tag
+group by 1, 2, 3;
 
 -- [29] display_service_view()
 -- -----------------------------------------------------------------------------
