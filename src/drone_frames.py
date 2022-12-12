@@ -14,6 +14,9 @@ def make_drone_nav(parent, controller):
     
     takeover_drone_button = make_nav_button(nav, controller, TakeoverDroneFrame, 'Takeover', parent)
     takeover_drone_button.grid(row=0, column=2, sticky='w')
+    
+    join_swarm_button = make_nav_button(nav, controller, JoinSwarmFrame, 'Join Swarm', parent)
+    join_swarm_button.grid(row=0, column=3, sticky='w')
     make_header(nav, 'Drones')
     return nav
 
@@ -117,4 +120,50 @@ class TakeoverDroneFrame(tk.Frame):
         self.username.delete(0, 'end')
         self.id.delete(0, 'end')
         self.tag.delete(0, 'end')
+        
+        
+class JoinSwarmFrame(tk.Frame):
+    def __init__(self, parent, controller, **kwargs):
+        tk.Frame.__init__(self, parent)
+        
+        nav = tk.Frame(self)
+        self.back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
+                                      data=rse.display_drone_view, nav=make_drone_nav)
+        self.back_button.grid(row=0, column=0, sticky='w')
+        
+        make_header(nav, 'Join Swarm')
+        nav.pack(padx=5, pady=5, fill='both', expand=True)
+        
+        panel = tk.Frame(self)
+        self.id = make_entry(panel, 'Drone Id', 0)
+        self.id.focus_set()
+        self.tag = make_entry(panel, 'Drone Tag', 1)
+        self.swarm_leader_tag = make_entry(panel, 'Swarm Leader Tag', 2)
+        
+        submit_button = tk.Button(panel, text='Submit', command=self.submit)
+        submit_button.grid(row=3, column=0, sticky='w')
+        clear_button = tk.Button(panel, text='Clear', command=self.clear)
+        clear_button.grid(row=3, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
+        panel.pack(padx=5, pady=5, fill='both', expand=True)
+        
+        
+    def submit(self):
+        error = rse.join_swarm((
+            self.id.get(),
+            self.tag.get(),
+            self.swarm_leader_tag.get()
+        ))
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=4, column=0, columnspan=3, sticky='w')
+        else:
+            self.back_button.invoke()
+        
+        
+    def clear(self):
+        self.id.delete(0, 'end')
+        self.tag.delete(0, 'end')
+        self.swarm_leader_tag.delete(0, 'end')
         

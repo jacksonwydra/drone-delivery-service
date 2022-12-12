@@ -240,6 +240,18 @@ def takeover_drone(params):
     query = 'call takeover_drone(%s, %s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def join_swarm(params):
+    '''[15] join_swarm
+
+    Args:
+        params (tuple): (id, tag, swarm_leader_tag)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call join_swarm(%s, %s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
