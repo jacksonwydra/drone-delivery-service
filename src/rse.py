@@ -209,6 +209,18 @@ def manage_service(params):
     query = 'call manage_service(%s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def takeover_drone(params):
+    '''[14] takeover_drone
+
+    Args:
+        params (tuple): (username, id, tag)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call takeover_drone(%s, %s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():

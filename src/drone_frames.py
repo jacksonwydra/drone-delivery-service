@@ -11,6 +11,9 @@ def make_drone_nav(parent, controller):
     
     add_drone_button = make_nav_button(nav, controller, AddDroneFrame, 'Add', parent)
     add_drone_button.grid(row=0, column=1, sticky='w')
+    
+    takeover_drone_button = make_nav_button(nav, controller, TakeoverDroneFrame, 'Takeover', parent)
+    takeover_drone_button.grid(row=0, column=2, sticky='w')
     make_header(nav, 'Drones')
     return nav
 
@@ -68,4 +71,50 @@ class AddDroneFrame(tk.Frame):
         self.capacity.delete(0, 'end')
         self.sales.delete(0, 'end')
         self.flown_by.delete(0, 'end')
+        
+
+class TakeoverDroneFrame(tk.Frame):
+    def __init__(self, parent, controller, **kwargs):
+        tk.Frame.__init__(self, parent)
+        
+        nav = tk.Frame(self)
+        self.back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
+                                      data=rse.display_drone_view, nav=make_drone_nav)
+        self.back_button.grid(row=0, column=0, sticky='w')
+        
+        make_header(nav, 'Takeover Drone')
+        nav.pack(padx=5, pady=5, fill='both', expand=True)
+        
+        panel = tk.Frame(self)
+        self.username = make_entry(panel, 'Pilot Username', 0)
+        self.username.focus_set()
+        self.id = make_entry(panel, 'Drone Id', 1)
+        self.tag = make_entry(panel, 'Drone Tag', 2)
+        
+        submit_button = tk.Button(panel, text='Submit', command=self.submit)
+        submit_button.grid(row=3, column=0, sticky='w')
+        clear_button = tk.Button(panel, text='Clear', command=self.clear)
+        clear_button.grid(row=3, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
+        panel.pack(padx=5, pady=5, fill='both', expand=True)
+        
+        
+    def submit(self):
+        error = rse.takeover_drone((
+            self.username.get(),
+            self.id.get(),
+            self.tag.get()
+        ))
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=4, column=0, columnspan=3, sticky='w')
+        else:
+            self.back_button.invoke()
+        
+        
+    def clear(self):
+        self.username.delete(0, 'end')
+        self.id.delete(0, 'end')
+        self.tag.delete(0, 'end')
         
