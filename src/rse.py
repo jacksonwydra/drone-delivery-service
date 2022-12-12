@@ -336,6 +336,18 @@ def remove_drone(params):
     query = 'call remove_drone(%s, %s);'
     execute_procedure(query, params)
     return None
+
+
+def remove_pilot_role(params):
+    '''[23] remove_pilot_role
+
+    Args:
+        params (tuple): (username,)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call remove_pilot_role(%s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
