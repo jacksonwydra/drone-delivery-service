@@ -21,11 +21,11 @@ class HomeFrame(tk.Frame):
         panel = tk.Frame(self)
         header = tk.Label(panel, text='Drone Delivery Service', font='Helvetica 36 bold')
         
-        owner_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'View Owners', self,
+        owner_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Owners', self,
                                                data=rse.display_owner_view, nav=make_owner_nav)
         owner_view_button.grid(row=1, column=0, sticky='w')
         
-        employee_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'View Employees', self,
+        employee_view_button = make_nav_button(panel, controller, DisplayViewFrame, 'Employees', self,
                                                data=rse.display_employee_view, nav=make_employee_nav)
         employee_view_button.grid(row=2, column=0, sticky='w')
         

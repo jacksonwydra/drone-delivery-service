@@ -26,6 +26,9 @@ def make_drone_nav(parent, controller):
     
     fly_drone_button = make_nav_button(nav, controller, FlyDroneFrame, 'Fly', parent)
     fly_drone_button.grid(row=0, column=6, sticky='w')
+    
+    remove_drone_button = make_nav_button(nav, controller, RemoveDroneFrame, 'Remove', parent)
+    remove_drone_button.grid(row=0, column=7, sticky='w')
     make_header(nav, 'Drones')
     return nav
 
@@ -310,4 +313,47 @@ class FlyDroneFrame(tk.Frame):
         self.id.delete(0, 'end')
         self.tag.delete(0, 'end')
         self.destination.delete(0, 'end')
+        
+        
+class RemoveDroneFrame(tk.Frame):
+    def __init__(self, parent, controller, **kwargs):
+        tk.Frame.__init__(self, parent)
+        
+        nav = tk.Frame(self)
+        self.back_button = make_nav_button(nav, controller, DisplayViewFrame, 'Back', self,
+                                      data=rse.display_drone_view, nav=make_drone_nav)
+        self.back_button.grid(row=0, column=0, sticky='w')
+        
+        make_header(nav, 'Remove Drone')
+        nav.pack(padx=5, pady=5, fill='both', expand=True)
+        
+        panel = tk.Frame(self)
+        self.id = make_entry(panel, 'Id', 0)
+        self.id.focus_set()
+        self.tag = make_entry(panel, 'Tag', 1)
+        
+        submit_button = tk.Button(panel, text='Submit', command=self.submit)
+        submit_button.grid(row=2, column=0, sticky='w')
+        clear_button = tk.Button(panel, text='Clear', command=self.clear)
+        clear_button.grid(row=2, column=1, sticky='w')
+        self.error = tk.StringVar()
+        self.error_box = tk.Label(panel, textvariable=self.error, fg='red')
+        panel.pack(padx=5, pady=5, fill='both', expand=True)
+        
+        
+    def submit(self):
+        error = rse.remove_drone((
+            self.id.get(),
+            self.tag.get()
+        ))
+        if error:
+            self.error.set(error)
+            self.error_box.grid(row=3, column=0, columnspan=3, sticky='w')
+        else:
+            self.back_button.invoke()
+        
+        
+    def clear(self):
+        self.id.delete(0, 'end')
+        self.tag.delete(0, 'end')
         

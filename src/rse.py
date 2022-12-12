@@ -324,6 +324,18 @@ def remove_ingredient(params):
     query = 'call remove_ingredient(%s);'
     execute_procedure(query, params)
     return None
+
+
+def remove_drone(params):
+    '''[22] remove_drone
+
+    Args:
+        params (tuple): (id, tag)
+    '''
+    if not all(params): return 'Make sure to fill out all values.'
+    query = 'call remove_drone(%s, %s);'
+    execute_procedure(query, params)
+    return None
     
     
 def display_owner_view():
