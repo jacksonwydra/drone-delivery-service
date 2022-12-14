@@ -35,11 +35,22 @@ def rse_connect():
 def execute_procedure(query, params=None):
     cnx = rse_connect()
     cursor = cnx.cursor()
-    cursor.execute(query, params)
+    
+    try:
+        cursor.execute(query, params)
+    except Exception as e:
+        print(e)
+        return e
+
     cnx.commit()
     warnings = cursor.fetchwarnings()
     if warnings: print(warnings)
     cnx.close()
+
+    if cursor.rowcount == 0:
+        return 'No rows affected'
+
+    return None
 
 
 def get_view(query):
@@ -48,17 +59,6 @@ def get_view(query):
     cursor.execute(query)
     output = cursor.fetchall()
     output.insert(0, cursor.column_names)
-    warnings = cursor.fetchwarnings()
-    if warnings: print(warnings)
-    cnx.close()
-    
-    return output
-
-def execute_query(query):
-    cnx = rse_connect()
-    cursor = cnx.cursor()
-    cursor.execute(query)
-    output = cursor.fetchall()
     warnings = cursor.fetchwarnings()
     if warnings: print(warnings)
     cnx.close()
@@ -74,16 +74,8 @@ def add_owner(params):
     '''
     # Check for null values
     if not all(params): return 'Make sure to fill out all values.'
-    
-    # Make sure user does not already exist
-    for row in execute_query('select username from employees union select username from restaurant_owners'):
-        username = row[0]
-        if username == params[0]:
-            return 'User already exists'
-        
     query = 'call add_owner(%s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
 
 def add_employee(params):
@@ -94,8 +86,7 @@ def add_employee(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_employee(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_pilot_role(params):
@@ -106,8 +97,7 @@ def add_pilot_role(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_pilot_role(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_worker_role(params):
@@ -118,8 +108,7 @@ def add_worker_role(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_worker_role(%s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_ingredient(params):
@@ -130,8 +119,7 @@ def add_ingredient(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_ingredient(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_drone(params):
@@ -142,8 +130,7 @@ def add_drone(params):
     '''
     if not all(params[:-1]): return 'Make sure to fill out all values.'
     query = 'call add_drone(%s, %s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_restaurant(params):
@@ -154,8 +141,7 @@ def add_restaurant(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_restaurant(%s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_service(params):
@@ -166,8 +152,7 @@ def add_service(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_service(%s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_location(params):
@@ -178,8 +163,7 @@ def add_location(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call add_location(%s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def start_funding(params):
@@ -190,8 +174,7 @@ def start_funding(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call start_funding(%s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def hire_employee(params):
@@ -202,8 +185,7 @@ def hire_employee(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call hire_employee(%s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def fire_employee(params):
@@ -214,8 +196,7 @@ def fire_employee(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call fire_employee(%s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def manage_service(params):
@@ -226,8 +207,7 @@ def manage_service(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call manage_service(%s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def takeover_drone(params):
@@ -238,8 +218,7 @@ def takeover_drone(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call takeover_drone(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def join_swarm(params):
@@ -250,8 +229,7 @@ def join_swarm(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call join_swarm(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def leave_swarm(params):
@@ -262,8 +240,7 @@ def leave_swarm(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call leave_swarm(%s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def load_drone(params):
@@ -274,8 +251,7 @@ def load_drone(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call load_drone(%s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def refuel_drone(params):
@@ -286,8 +262,7 @@ def refuel_drone(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call refuel_drone(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def fly_drone(params):
@@ -298,8 +273,7 @@ def fly_drone(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call fly_drone(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def purchase_ingredient(params):
@@ -310,8 +284,7 @@ def purchase_ingredient(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call purchase_ingredient(%s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def remove_ingredient(params):
@@ -322,8 +295,7 @@ def remove_ingredient(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call remove_ingredient(%s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def remove_drone(params):
@@ -334,8 +306,7 @@ def remove_drone(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call remove_drone(%s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
 
 
 def remove_pilot_role(params):
@@ -346,8 +317,7 @@ def remove_pilot_role(params):
     '''
     if not all(params): return 'Make sure to fill out all values.'
     query = 'call remove_pilot_role(%s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def display_owner_view():
