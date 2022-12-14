@@ -35,11 +35,19 @@ def rse_connect():
 def execute_procedure(query, params=None):
     cnx = rse_connect()
     cursor = cnx.cursor()
-    cursor.execute(query, params)
+    
+    try:
+        cursor.execute(query, params)
+    except Exception as e:
+        print(e)
+        return e
+
     cnx.commit()
     warnings = cursor.fetchwarnings()
     if warnings: print(warnings)
     cnx.close()
+
+    return None
 
 
 def get_view(query):
@@ -75,15 +83,12 @@ def add_owner(params):
     # Check for null values
     if not all(params): return 'Make sure to fill out all values.'
     
-    # Make sure user does not already exist
-    for row in execute_query('select username from employees union select username from restaurant_owners'):
-        username = row[0]
-        if username == params[0]:
-            return 'User already exists'
+    # Ensure valid mutation
+    if params[0] in [r[0] for r in execute_query('select username from employees union select username from restaurant_owners')]:
+        return 'User already exists'
         
     query = 'call add_owner(%s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
 
 def add_employee(params):
@@ -93,9 +98,14 @@ def add_employee(params):
         params (tuple): (username, first_name, last_name, address, birthdate, taxID, hired, experience, salary)
     '''
     if not all(params): return 'Make sure to fill out all values.'
+    
+    if params[0] in [r[0] for r in execute_query('select username from employees union select username from restaurant_owners')]:
+        return 'User already exists'
+    if params[5] in [r[0] for r in execute_query('select taxID from employees')]:
+        return 'Tax ID already in use'
+        
     query = 'call add_employee(%s, %s, %s, %s, %s, %s, %s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_pilot_role(params):
@@ -105,9 +115,14 @@ def add_pilot_role(params):
         params (tuple): (username, licenseID, pilot_experience)
     '''
     if not all(params): return 'Make sure to fill out all values.'
+    
+    if params[0] not in [r[0] for r in execute_query('select username from employees')]:
+        return 'Employee does not exist'
+    if params[0] in [r[0] for r in execute_query('select username from pilots')]:
+        return 'User is already a pilot'
+        
     query = 'call add_pilot_role(%s, %s, %s);'
-    execute_procedure(query, params)
-    return None
+    return execute_procedure(query, params)
     
     
 def add_worker_role(params):
